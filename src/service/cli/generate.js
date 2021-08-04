@@ -26,7 +26,14 @@ const SENTENCES = [
   `При покупке с меня бесплатная доставка в черте города.`,
 ];
 
-const CATEGORIES = [`Книги`, `Разное`, `Посуда`, `Игры`, `Животные`, `Журналы`];
+const CATEGORIES = [
+  `Книги`,
+  `Разное`,
+  `Посуда`,
+  `Игры`,
+  `Животные`,
+  `Журналы`
+];
 
 const OfferType = {
   OFFER: `offer`,
@@ -44,26 +51,30 @@ const PictureRestrict = {
 };
 
 const getPictureFileName = (num) => {
-  let formatNum = String(num).padStart(2, `0`);
+  const formatNum = String(num).padStart(2, `0`);
   return `item${formatNum}.jpg`;
 };
+
+const getRandFromArr = (arr) => arr[getRandomInt(0, arr.length - 1)];
+const getDescription = () => shuffle(SENTENCES).slice(1, 5).join(` `);
+const getPicture = () => getPictureFileName(getRandomInt(PictureRestrict.MIN, PictureRestrict.MAX));
+const getType = () => OfferType[
+  Object.keys(OfferType)[
+    Math.floor(Math.random() * Object.keys(OfferType).length)
+  ]
+];
+const getSum = () => getRandomInt(SumRestrict.MIN, SumRestrict.MAX);
 
 const generateOffers = (count) =>
   Array(count)
     .fill({})
     .map(() => ({
-      category: [CATEGORIES[getRandomInt(0, CATEGORIES.length - 1)]],
-      description: shuffle(SENTENCES).slice(1, 5).join(` `),
-      picture: getPictureFileName(
-          getRandomInt(PictureRestrict.MIN, PictureRestrict.MAX)
-      ),
-      title: TITLES[getRandomInt(0, TITLES.length - 1)],
-      type: OfferType[
-        Object.keys(OfferType)[
-          Math.floor(Math.random() * Object.keys(OfferType).length)
-        ]
-      ],
-      sum: getRandomInt(SumRestrict.MIN, SumRestrict.MAX),
+      category: [getRandFromArr(CATEGORIES)],
+      description: getDescription(),
+      picture: getPicture(),
+      title: getRandFromArr(TITLES),
+      type: getType(),
+      sum: getSum(),
     }));
 
 module.exports = {
